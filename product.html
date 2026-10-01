@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>product-content</title>
+    <link rel="stylesheet" href="./product.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="icon" href="./images/logo.png">
+    <style>
+        /* ── CHATBOX CONFIGURATION TOKENS ───────────────────── */
+        :root {
+            --chat-bg: #191c1a;
+            --chat-user: #262a28;
+            --chat-ai: #202422;
+            --chat-green: #4a6b53;
+            --chat-light: #73967d;
+            --chat-white: #ffffff;
+            --chat-mist: #8c928e;
+            --chat-ease: cubic-bezier(.4, 0, .2, 1);
+            --chat-r-lg: 1.25rem;
+        }
+
+        /* ── CHAT LAUNCHER BUTTON ──────────────────────────── */
+        .chat-launcher {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 2000;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #111412, #202422);
+            color: var(--chat-white);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .25), 0 0 0 0 rgba(74, 107, 83, .4);
+            transition: transform .2s var(--chat-ease), box-shadow .2s;
+            animation: chat-pulse-ring 3s ease-out infinite;
+        }
+
+        .chat-launcher:hover {
+            transform: scale(1.07);
+        }
+
+        .chat-launcher.open {
+            background: linear-gradient(135deg, var(--chat-green), var(--chat-light));
+        }
+
+        @keyframes chat-pulse-ring {
+            0% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, .25), 0 0 0 0 rgba(74, 107, 83, .4);
+            }
+
+            50% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, .25), 0 0 0 12px rgba(74, 107, 83, 0);
+            }
+
+            100% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, .25), 0 0 0 0 rgba(74, 107, 83, 0);
+            }
+        }
+
+        /* ── CHAT DISPLAY PANEL ────────────────────────────── */
+        .chat-panel {
+            position: fixed;
+            bottom: 5.5rem;
+            right: 2rem;
+            z-index: 1999;
+            width: 380px;
+            max-height: 540px;
+            height: 80vh;
+            background: var(--chat-bg);
+            border-radius: 1.25rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, .4), 0 0 0 1px rgba(255, 255, 255, .06);
+            transform: scale(.9) translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            font-family: 'DM Sans', sans-serif;
+            transition: transform .3s var(--chat-ease), opacity .3s var(--chat-ease);
+        }
+
+        .chat-panel.open {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .chat-header {
+            padding: 1.1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--chat-green), #2d4234);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .chat-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            right: 1px;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #22c55e;
+            border: 2px solid var(--chat-bg);
+        }
+
+        .chat-title {
+            color: var(--chat-white);
+            font-weight: 500;
+            font-size: .88rem;
+        }
+
+        .chat-status {
+            color: rgba(255, 255, 255, .45);
+            font-size: .72rem;
+        }
+
+        .chat-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, .4);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: .25rem;
+            transition: color .2s;
+        }
+
+        .chat-close:hover {
+            color: var(--chat-white);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            scroll-behavior: smooth;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, .1);
+            border-radius: 2px;
+        }
+
+        /* ── MESSAGE BUBBLES ───────────────────────────────── */
+        .msg {
+            display: flex;
+            gap: .6rem;
+            max-width: 92%;
+            animation: msgIn .25s var(--chat-ease) forwards;
+        }
+
+        .msg.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .msg-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .75rem;
+            flex-shrink: 0;
+            margin-top: .15rem;
+        }
+
+        .msg.ai .msg-avatar {
+            background: linear-gradient(135deg, var(--chat-green), #2d4234);
+        }
+
+        .msg.user .msg-avatar {
+            background: rgba(255, 255, 255, .12);
+        }
+
+        .msg-bubble {
+            padding: .75rem 1rem;
+            border-radius: var(--chat-r-lg);
+            font-size: .83rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, .88);
+        }
+
+        .msg.ai .msg-bubble {
+            background: var(--chat-ai);
+            border-bottom-left-radius: .2rem;
+            text-align: left;
+        }
+
+        .msg.user .msg-bubble {
+            background: var(--chat-green);
+            color: var(--chat-white);
+            border-bottom-right-radius: .2rem;
+        }
+
+        .msg-time {
+            font-size: .62rem;
+            color: rgba(255, 255, 255, .25);
+            margin-top: .3rem;
+            text-align: right;
+        }
+
+        .msg.user .msg-time {
+            text-align: left;
+        }
+
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── CHAT SUGGESTIONS & CHIPS ──────────────────────── */
+        .chat-suggestions {
+            padding: .75rem 1.25rem .5rem;
+            display: flex;
+            gap: .5rem;
+            flex-wrap: wrap;
+        }
+
+        .suggestion-chip {
+            padding: .35rem .85rem;
+            border-radius: 1.5rem;
+            background: rgba(255, 255, 255, .07);
+            color: rgba(255, 255, 255, .7);
+            font-size: .72rem;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, .1);
+            transition: background .2s, border-color .2s;
+            white-space: nowrap;
+        }
+
+        .suggestion-chip:hover {
+            background: rgba(74, 107, 83, .2);
+            border-color: rgba(74, 107, 83, .4);
+            color: var(--chat-white);
+        }
+
+        /* ── INPUT SYSTEM ─────────────────────────────────── */
+        .chat-input-row {
+            padding: .75rem 1.25rem 1.25rem;
+            display: flex;
+            gap: .6rem;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, .07);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 2rem;
+            padding: .7rem 1.1rem;
+            color: var(--chat-white);
+            font-size: .83rem;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .chat-input:focus {
+            border-color: rgba(115, 150, 125, .5);
+        }
+
+        .send-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--chat-green), #2d4234);
+            border: none;
+            color: var(--chat-white);
+            font-size: 1rem;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: transform .15s, opacity .2s;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .send-btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        /* ── TYPING BUBBLE INDICATOR ───────────────────────── */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: .5rem 0;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .35);
+            animation: typingPulse 1.2s ease-in-out infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: .2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: .4s;
+        }
+
+        @keyframes typingPulse {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+                opacity: .35;
+            }
+
+            30% {
+                transform: translateY(-4px);
+                opacity: 1;
+            }
+        }
+
+/* ── MOBILE RESPONSIVE ───────────────────────────── */
+@media (max-width: 768px) {
+
+    .chat-launcher {
+        width: 52px;
+        height: 52px;
+        right: 1rem;
+        bottom: 1rem;
+        font-size: 1.2rem;
+    }
+
+    .chat-panel {
+        width: calc(100vw - 20px);
+        height: 75vh;
+        max-height: none;
+        right: 10px;
+        left: 10px;
+        bottom: 4.5rem;
+        border-radius: 1rem;
+    }
+
+    .chat-header {
+        padding: 1rem;
+    }
+
+    .chat-title {
+        font-size: 0.85rem;
+    }
+
+    .chat-status {
+        font-size: 0.7rem;
+    }
+
+    .chat-messages {
+        padding: 1rem;
+    }
+
+    .msg {
+        max-width: 100%;
+    }
+
+    .msg-bubble {
+        font-size: 0.8rem;
+        padding: 0.7rem 0.9rem;
+    }
+
+    .chat-suggestions {
+        padding: 0.75rem 1rem 0.5rem;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        scrollbar-width: none;
+    }
+
+    .chat-suggestions::-webkit-scrollbar {
+        display: none;
+    }
+
+    .suggestion-chip {
+        flex-shrink: 0;
+    }
+
+    .chat-input-row {
+        padding: 0.75rem 1rem 1rem;
+    }
+
+    .chat-input {
+        font-size: 16px; /* Prevents zoom on iPhone */
+        padding: 0.7rem 1rem;
+    }
+
+    .send-btn {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+
+    .chat-panel {
+        width: calc(100vw - 12px);
+        left: 6px;
+        right: 6px;
+        height: 80vh;
+        bottom: 4rem;
+    }
+
+    .chat-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .msg-avatar {
+        width: 24px;
+        height: 24px;
+    }
+
+    .msg-bubble {
+        font-size: 0.75rem;
+        line-height: 1.5;
+    }
+
+    .chat-input {
+        font-size: 16px;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="container1">
+        <div class="row1">
+            <img src="./images/logo.png" alt="Logo">
+            <div class="logoText">Grocer's Store</div>
+        </div>
+
+        <div class="menu-btn" id="menuBtn">☰</div>
+
+        <div class="row2">
+            <a href="#home">Home</a>
+            <a href="about.html">About</a>
+            <a href="product.html">Product</a>
+            <a href="./blog.html">Blogs</a>
+            <a href="./contact.html">Contact</a>
+            <a href="./testimonial.html">Testimonial</a>
+            <a href="./offer.html" class="order-btn">Get Offer!</a>
+        </div>
+    </div>
+
+    <div class="categories" id="about">
+        <div class="catItem">
+            <div class="items">
+                <a href="#fruits">
+                    <h3>Fruits</h3>
+                    <p>Local Market</p>
+                    <img src="./images/fruit.png" alt="" height="60" width="60">
+                </a>
+            </div>
+            <div class="items">
+                <a href="#vegetables">
+                    <h3>Vegetables</h3>
+                    <p>Local Market</p>
+                    <img src="./images/veg.png" alt="" height="60" width="60">
+                </a>
+            </div>
+            <div class="items">
+                <a href="#milk">
+                    <h3>Milk</h3>
+                    <p>Local Market</p>
+                    <img src="./images/milk.png" alt="" height="60" width="60">
+                </a>
+            </div>
+            <div class="items">
+                <a href="#seafoods">
+                    <h3>Sea Foods</h3>
+                    <p>Local Market</p>
+                    <img src="./images/sea.png" alt="" height="60" width="60">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <section class="container">
+        <h2 id="fruits">Fruits</h2>
+        <div class="containers1" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>Apple</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/apple.webp" alt="Apple" class="productImg">
+                <p>Fresh and juicy apples.</p>
+                <h4>₹500</h4>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>Orange</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/orange.webp" alt="Orange" class="productImg">
+                <p>Sweet and healthy oranges.</p>
+                <h4>₹300</h4>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>Jamun Fruit</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/jamun.webp" alt="Jamun Fruit" class="productImg">
+                <p>Sweet and healthy jamun.</p>
+                <h4>₹300</h4>
+                <button>Add to Cart</button>
+            </div>
+        </div>
+
+        <h2 id="vegetables">Vegetables</h2>
+        <div class="containers1" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>Tomato</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/Tomato1.webp" alt="Tomato" class="productImg">
+                <p>Fresh farm tomatoes.</p>
+                <h4>₹150</h4>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>Broccoli</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/broccoli.webp" alt="Tomato" class="productImg">
+                <p>Fresh farm broccoli.</p>
+                <h4>₹250</h4>
+                <button>Add to Cart</button>
+            </div>
+        </div>
+
+        <h2 id="seafoods">Meat and Sea foods</h2>
+        <div class="containers1" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>Fish</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/fish.webp" alt="Tomato" class="productImg">
+                <p>Fresh farm fish.</p>
+                <h4>₹350</h4>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>Chicken</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/chicken.webp" alt="Tomato" class="productImg">
+                <p>Fresh farm Chicken.</p>
+                <h4>₹450</h4>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>Fresh Meat</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/meat.webp" alt="Tomato" class="productImg">
+                <p>Fresh farm meat.</p>
+                <h4>₹150</h4>
+                <button>Add to Cart</button>
+            </div>
+        </div>
+
+        <h2 id="milk">Milk and Breads</h2>
+        <div class="containers1" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>Milk</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/milk.jpg" alt="Tomato" class="productImg">
+                <p>Fresh farm Milk.</p>
+                <h4>₹350</h4>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>Breads</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/bread1.webp" alt="Tomato" class="productImg">
+                <p>Fresh farm Breads.</p>
+                <h4>₹350</h4>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>cookies</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/NutsCookies.webp" alt="Tomato" class="productImg">
+                <p>Fresh farm NutsCookies.</p>
+                <h4>₹350</h4>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <div class="cardHeader">
+                    <h3>Eggs</h3>
+                    <img src="./images/like.png" alt="wishlist" width="30">
+                </div>
+                <img src="./images/egg.webp" alt="Tomato" class="productImg">
+                <p>Fresh farm Egg.</p>
+                <h4>₹350</h4>
+                <button>Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="foot">
+        <div>
+            <div class="footerLogo">
+                <img src="./images/logo.png" alt="App Logo" width="40" height="40">
+                <span>Grocer's Store</span>
+            </div>
+            <div class="groupLogo">
+                <img src="./images/fb.jpg" alt="Facebook">
+                <img src="./images/wa.jpg" alt="WhatsApp">
+                <img src="./images/insta.jpg" alt="Instagram">
+            </div>
+            <div class="copyright">
+                Copyright © 2026 by Grocer's Store, Inc. All rights reserved.
+            </div>
+        </div>
+
+        <div class="footer-content">
+            <h3>Contact Us</h3>
+            <ul>
+                <li>1/110, Gandhi Street, Coimbatore</li>
+                <li>0452-854-632</li>
+                <li>hello@gmail.com</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Account</h3>
+            <ul>
+                <li>Create Account</li>
+                <li>Sign In</li>
+                <li>iOS App</li>
+                <li>Android App</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Company</h3>
+            <ul>
+                <li id="about">About Us</li>
+                <li id="home">For Business</li>
+                <li id="home">Partners</li>
+                <li id="home">Careers</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Resources</h3>
+            <ul>
+                <li>Organic Products</li>
+                <li>Help Center</li>
+                <li>Privacy Policy</li>
+                <li>Terms & Conditions</li>
+            </ul>
+        </div>
+    </section>
+
+    <button class="chat-launcher" id="chatLauncher" onclick="toggleChat()"
+        title="Chat with AI Grocery Guide">🤖</button>
+
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header">
+            <div class="chat-avatar">🥦</div>
+            <div>
+                <div class="chat-title">Grocer's AI Guide</div>
+                <div class="chat-status">Online · Suggests recipes</div>
+            </div>
+            <div class="chat-close" onclick="toggleChat()">✕</div>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-suggestions" id="chatSuggestions">
+            <span class="suggestion-chip" onclick="sendSuggestion(this)">What fruits are available?</span>
+            <span class="suggestion-chip" onclick="sendSuggestion(this)">Recipe ideas</span>
+            <span class="suggestion-chip" onclick="sendSuggestion(this)">Delivery information</span>
+        </div>
+        <div class="chat-input-row">
+            <input class="chat-input" id="chatInput" placeholder="Ask about ingredients, recipes..."
+                onkeydown="handleKey(event)" />
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <script>
+        /* Existing category selector script */
+        const categories = document.querySelectorAll('.items');
+        categories.forEach(item => {
+            item.addEventListener('click', () => {
+                categories.forEach(cat => cat.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        /* ── INTERACTIVE AI CHATBOX BACKEND SCRIPT ──────────────── */
+        let chatOpen = false;
+        let isTyping = false;
+        let chatHistory = [];
+
+
+
+        // Context mapped directly from your HTML items
+        const SYSTEM_PROMPT = `You are the Grocer's Store AI Assistant — an expert food, stock, and meal companion for Grocer's Store.
+
+Current Store Stock & Item Pricing:
+- Fruits: Apple (₹500), Orange (₹300), Jamun Fruit (₹300)
+- Vegetables: Tomato (₹150), Broccoli (₹250)
+- Meat & Sea Foods: Fish (₹350), Chicken (₹450), Fresh Meat (₹150)
+- Milk & Breads: Milk (₹350), Breads (₹350), Nuts Cookies (₹350), Eggs (₹350)
+
+Guidelines:
+1. Be polite, concise, and helpful. Frame replies inside 2-3 sentences maximum.
+2. Recommend recipe combinations using ONLY the items listed in stock above. 
+3. Address store location queries: 1/110, Gandhi Street, Coimbatore. Phone: 0452-854-632.
+4. Do not offer variations or imagine items that are not explicitly noted in the stock inventory above.`;
+
+        function toggleChat() {
+            chatOpen = !chatOpen;
+            document.getElementById('chatPanel').classList.toggle('open', chatOpen);
+            document.getElementById('chatLauncher').classList.toggle('open', chatOpen);
+            document.getElementById('chatLauncher').textContent = chatOpen ? '✕' : '🤖';
+
+            if (chatOpen && chatHistory.length === 0) {
+                setTimeout(() => addMessage('ai', "Welcome to Grocer's Store! 🥦 I'm your virtual culinary guide. Ask me about our items, contact details, or dinner recipe ideas using today's fresh haul!"), 300);
+            }
+        }
+
+        function addMessage(role, text) {
+            const container = document.getElementById('chatMessages');
+            const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const div = document.createElement('div');
+            div.className = `msg ${role}`;
+            div.innerHTML = `
+        <div class="msg-avatar">${role === 'ai' ? '🥦' : '👤'}</div>
+        <div>
+            <div class="msg-bubble">${text}</div>
+            <div class="msg-time">${now}</div>
+        </div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            chatHistory.push({ role: role === 'ai' ? 'assistant' : 'user', content: text });
+        }
+
+        function showTyping() {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'msg ai'; div.id = 'typingMsg';
+            div.innerHTML = `
+        <div class="msg-avatar">🥦</div>
+        <div><div class="msg-bubble" style="padding:.55rem .85rem">
+            <div class="typing-indicator">
+                <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+            </div>
+        </div></div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function hideTyping() {
+            const el = document.getElementById('typingMsg');
+            if (el) el.remove();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+
+            if (!text || isTyping) return;
+
+            input.value = '';
+            document.getElementById('chatSuggestions').style.display = 'none';
+
+            addMessage('user', text);
+            isTyping = true;
+            document.getElementById('sendBtn').disabled = true;
+            showTyping();
+
+            try {
+                const prompt = `${SYSTEM_PROMPT}\n\nCustomer Question:\n${text}`;
+
+                const data = await res.json();
+                hideTyping();
+
+                const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+                    "I'm experiencing a quick connection delay. Could you try asking that once more?";
+
+                addMessage('ai', reply);
+            } catch (error) {
+                console.error(error);
+                hideTyping();
+                addMessage('ai', 'Unable to check store shelves at this microsecond. Please look over your networking connection.');
+            }
+
+            isTyping = false;
+            document.getElementById('sendBtn').disabled = false;
+        }
+
+        function sendSuggestion(el) {
+            document.getElementById('chatInput').value = el.textContent;
+            sendMessage();
+        }
+
+        function handleKey(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Navbar Toggler
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.querySelector('.row2');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offer content page</title>
+    <link rel="stylesheet" href="./offer.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="icon" href="./images/logo.png">
+</head>
+
+<body>
+    <div class="container1">
+
+        <div class="row1">
+            <img src="./images/logo.png" alt="Logo">
+            <div class="logoText">Grocer's Store</div>
+        </div>
+
+        <div class="menu-btn" id="menuBtn">☰</div>
+
+        <div class="row2">
+
+            <a href="./home.html">Home</a>
+
+            <a href="about.html">About</a>
+
+            <a href="product.html">Product</a>
+
+            <a href="./blog.html">Blogs</a>
+
+            <a href="./contact.html">Contact</a>
+
+            <a href="./testimonial.html">Testimonial</a>
+
+            <a href="./offer.html" class="order-btn" id="products">
+                Get Offer!
+            </a>
+
+
+        </div>
+
+    </div>
+    <!-- offer details -->
+    <section class="offers">
+
+        <!-- Right Side Image -->
+        <div class="offer-card" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+            <div class="offer-content">
+                <span>01</span>
+                <h3>Fresh Vegetables Sale</h3>
+                <p>
+                    Get up to 30% off on fresh vegetables directly from local farms.
+                </p>
+
+
+                <button class="couponBtn">Get coupon</button>
+
+
+            </div>
+
+            <div class="offer-image">
+                <img src="./images/offer1.jpg" alt="">
+            </div>
+        </div>
+
+        <!-- Left Side Image -->
+        <div class="offer-card reverse">
+            <div class="offer-content">
+                <span>02</span>
+                <h3>Seasonal Fruits Offer</h3>
+                <p>
+                    Enjoy premium seasonal fruits at unbeatable prices this week.
+                </p>
+                <button class="couponBtn">Get coupon</button>
+            </div>
+
+            <div class="offer-image">
+                <img src="./images/offer2.jpg" alt="">
+            </div>
+        </div>
+
+        <!-- Right Side Image -->
+        <div class="offer-card">
+            <div class="offer-content">
+                <span>03</span>
+                <h3>Free Home Delivery</h3>
+                <p>
+                    Free doorstep delivery on grocery orders above ₹999.
+                </p>
+                <button class="couponBtn">Get coupon</button>
+            </div>
+
+            <div class="offer-image">
+                <img src="./images/offer3.jpg" alt="">
+            </div>
+        </div>
+
+    </section>
+
+    <!-- footer -->
+    <section class="foot">
+
+        <div>
+            <div class="footerLogo">
+                <img src="./images/logo.png" alt="App Logo" width="40" height="40">
+                <span>Grocer's Store</span>
+            </div>
+
+            <div class="groupLogo">
+                <img src="./images/fb.jpg" alt="Facebook">
+                <img src="./images/wa.jpg" alt="WhatsApp">
+                <img src="./images/insta.jpg" alt="Instagram">
+            </div>
+
+            <div class="copyright">
+                Copyright © 2026 by Grocer's Store, Inc.
+                All rights reserved.
+            </div>
+        </div>
+
+        <div class="footer-content">
+            <h3>Contact Us</h3>
+            <ul>
+                <li>1/110, Gandhi Street, Coimbatore</li>
+                <li>0452-854-632</li>
+                <li>hello@gmail.com</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Account</h3>
+            <ul>
+                <li>Create Account</li>
+                <li>Sign In</li>
+                <li>iOS App</li>
+                <li>Android App</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Company</h3>
+            <ul>
+                <li id="about">About Us</li>
+                <li id="home">For Business</li>
+                <li id="home">Partners</li>
+                <li id="home">Careers</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Resources</h3>
+            <ul>
+                <li>Organic Products</li>
+                <li>Help Center</li>
+                <li>Privacy Policy</li>
+                <li>Terms & Conditions</li>
+            </ul>
+        </div>
+
+    </section>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
+
+    <script>
+        // Navbar Toggler
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.querySelector('.row2');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

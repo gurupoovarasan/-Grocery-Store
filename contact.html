@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact content</title>
+    <link rel="stylesheet" href="./contact.css">
+    <link rel="icon" href="./images/logo.png">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+    <div class="container1">
+
+        <div class="row1">
+            <img src="./images/logo.png" alt="Logo">
+            <div class="logoText">Grocer's Store</div>
+        </div>
+
+        <div class="menu-btn" id="menuBtn">☰</div>
+
+        <div class="row2">
+
+            <a href="./home.html">Home</a>
+
+            <a href="about.html">About</a>
+
+            <a href="product.html">Product</a>
+
+            <a href="./blog.html">Blogs</a>
+
+            <a href="./contact.html">Contact</a>
+
+            <a href="./testimonial.html">Testimonial</a>
+
+            <a href="./offer.html" class="order-btn" id="products">
+                Get Offer!
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Contact Section -->
+    <section class="contactPromo" id="contact">
+
+        <div class="promoContent" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+
+            <h2>Get your first order for free!</h2>
+
+            <p>
+                Healthy, tasty and hassle-free order are waiting for you.
+                Start eating well today. You can cancel or pause anytime.
+                And the first meal is on us!
+            </p>
+
+            <form>
+
+                <div class="formRow">
+                    <div class="inputGroup">
+                        <label>Full Name</label>
+                        <input type="text" placeholder="John Smith">
+                    </div>
+
+                    <div class="inputGroup">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="me@example.com">
+                    </div>
+                </div>
+
+                <div class="formRow">
+                    <div class="inputGroup">
+                        <label>Where did you hear from us?</label>
+
+                        <select>
+                            <option>Please choose one option</option>
+                            <option>Instagram</option>
+                            <option>Facebook</option>
+                            <option>YouTube</option>
+                            <option>Friends & Family</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="signupBtn">
+                        Sign Up Now
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+        <div class="promoImage">
+            <img src="./images/contactImg.jpg" alt="Customer enjoying meal">
+        </div>
+
+    </section>
+
+    <section class="faqSection container my-5">
+
+        <h2 class="text-center mb-4">Frequently Asked Questions</h2>
+
+        <div class="accordion" id="faqAccordion" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+
+            <!-- FAQ 1 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Can I place orders online for home delivery?
+                    </button>
+                </h2>
+
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                    data-bs-parent="#faqAccordion">
+
+                    <div class="accordion-body">
+                        Yes, you can place orders online and get fresh groceries delivered directly to your doorstep.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo">
+                        What are your delivery timings?
+                    </button>
+                </h2>
+
+                <div id="collapseTwo" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        Our delivery service is available from 8:00 AM to 9:00 PM every day.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree">
+                        Do you offer same-day delivery?
+                    </button>
+                </h2>
+
+                <div id="collapseThree" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        Yes, same-day delivery is available for orders placed before the daily cutoff time.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ 4 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFour">
+                        Are your fruits and vegetables fresh?
+                    </button>
+                </h2>
+
+                <div id="collapseFour" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        We source fresh fruits and vegetables daily from trusted local suppliers.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ 5 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFive">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFive">
+                        What payment methods do you accept?
+                    </button>
+                </h2>
+
+                <div id="collapseFive" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        We accept UPI, debit cards, credit cards, net banking, and cash on delivery.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ 6 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingSix">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseSix">
+                        Can I return damaged products?
+                    </button>
+                </h2>
+
+                <div id="collapseSix" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        Yes, damaged or incorrect products can be reported for replacement or refund.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+    <section class="locationSection">
+        <h2>Find Our Store</h2>
+
+        <iframe src="https://maps.google.com/maps?q=Coimbatore&t=&z=12&ie=UTF8&iwloc=&output=embed" width="100%"
+            height="400" style="border:0;" loading="lazy">
+        </iframe>
+    </section>
+
+    <!-- footer Section -->
+    <section class="foot">
+
+        <div>
+            <div class="footerLogo">
+                <img src="./images/logo.png" alt="App Logo" width="40" height="40">
+                <span>Grocer's Store</span>
+            </div>
+
+            <div class="groupLogo">
+                <img src="./images/fb.jpg" alt="Facebook">
+                <img src="./images/wa.jpg" alt="WhatsApp">
+                <img src="./images/insta.jpg" alt="Instagram">
+            </div>
+
+            <div class="copyright">
+                Copyright © 2026 by Grocer's Store, Inc.
+                All rights reserved.
+            </div>
+        </div>
+
+        <div class="footer-content">
+            <h3>Contact Us</h3>
+            <ul>
+                <li>1/110, Gandhi Street, Coimbatore</li>
+                <li>0452-854-632</li>
+                <li>hello@gmail.com</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Account</h3>
+            <ul>
+                <li>Create Account</li>
+                <li>Sign In</li>
+                <li>iOS App</li>
+                <li>Android App</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Company</h3>
+            <ul>
+                <li id="about">About Us</li>
+                <li id="home">For Business</li>
+                <li id="home">Partners</li>
+                <li id="home">Careers</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Resources</h3>
+            <ul>
+               <li>Organic Products</li>
+                <li>Help Center</li>
+                <li>Privacy Policy</li>
+                <li>Terms & Conditions</li>
+            </ul>
+        </div>
+
+    </section>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Navbar Toggler
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.querySelector('.row2');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
+
+</body>
+
+</html>

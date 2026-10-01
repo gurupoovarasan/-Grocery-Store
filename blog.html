@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog content</title>
+    <link rel="stylesheet" href="./blog.css">
+    <link rel="icon" href="./images/logo.png">
+</head>
+
+<body>
+
+    <div class="container1">
+
+        <div class="row1">
+            <img src="./images/logo.png" alt="Logo">
+            <div class="logoText">Grocer's Store</div>
+        </div>
+
+        <div class="menu-btn" id="menuBtn">☰</div>
+
+        <div class="row2">
+
+            <a href="./home.html">Home</a>
+
+            <a href="about.html">About</a>
+
+            <a href="product.html">Product</a>
+
+            <a href="./blog.html">Blogs</a>
+
+            <a href="./contact.html">Contact</a>
+
+            <a href="./testimonial.html">Testimonial</a>
+
+            <a href="./offer.html" class="order-btn" id="products">
+                Get Offer!
+            </a>
+
+        </div>
+
+    </div>
+    <!-- blog Section -->
+    <section class="blogSection">
+
+        <div class="blogHeader">
+            <h2>Blogs</h2>
+
+            <p>
+                Stay updated with the latest WooCommerce tips,
+                eCommerce trends, and online business insights.
+                Explore helpful guides, tutorials, and solutions
+                to grow your online store faster.
+            </p>
+        </div>
+
+        <div class="blogs" id="blogs">
+
+        </div>
+
+    </section>
+
+    <!-- footer Section -->
+    <section class="foot">
+
+        <div>
+            <div class="footerLogo">
+                <img src="./images/logo.png" alt="App Logo" width="40" height="40">
+                <span>Grocer's Store</span>
+            </div>
+
+            <div class="groupLogo">
+                <img src="./images/fb.jpg" alt="Facebook">
+                <img src="./images/wa.jpg" alt="WhatsApp">
+                <img src="./images/insta.jpg" alt="Instagram">
+            </div>
+
+            <div class="copyright">
+                Copyright © 2026 by Grocer's Store, Inc.
+                All rights reserved.
+            </div>
+        </div>
+
+        <div class="footer-content">
+            <h3>Contact Us</h3>
+            <ul>
+                <li>1/110, Gandhi Street, Coimbatore</li>
+                <li>0452-854-632</li>
+                <li>hello@gmail.com</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Account</h3>
+            <ul>
+                <li>Create Account</li>
+                <li>Sign In</li>
+                <li>iOS App</li>
+                <li>Android App</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Company</h3>
+            <ul>
+                <li id="about">About Us</li>
+                <li id="home">For Business</li>
+                <li id="home">Partners</li>
+                <li id="home">Careers</li>
+            </ul>
+        </div>
+
+        <div class="footer-content">
+            <h3>Resources</h3>
+            <ul>
+                <li>Organic Products</li>
+                <li>Help Center</li>
+                <li>Privacy Policy</li>
+                <li>Terms & Conditions</li>
+            </ul>
+        </div>
+
+    </section>
+
+    <script>
+
+        const fetchApi = async () => {
+            try {
+                const res = await fetch(
+                    'https://mocki.io/v1/7c9feaf3-18f1-4552-8d90-449c6f65a826'
+                );
+
+                const data = await res.json();
+
+                const blogs = document.getElementById("blogs");
+
+                blogs.innerHTML = data.blogs.map(blog => `
+     <div class="blog">
+    <img src="${blog.image}" alt="${blog.title}">
+
+    <div class="blogInfo">
+        <span><img src="./images/calenders-removebg-preview.png"/>${blog.date}</span>
+        <span><img src="./images/cartss-removebg-preview.png" /> ${blog.category}</span>
+    </div>
+
+    <h3>${blog.title}</h3>
+
+    <p class="description">${blog.description}</p>
+    
+    <p class="content clamped">${blog.content}</p>
+    
+  
+</div>
+        `).join("");
+
+            } catch (error) {
+                console.error("Error fetching blogs:", error);
+            }
+        };
+
+        fetchApi();
+
+
+
+    </script>
+
+
+
+    <script>
+        // Navbar Toggler
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.querySelector('.row2');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>
